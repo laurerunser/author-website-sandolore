@@ -419,7 +419,9 @@ body.inner {
    Drifting, distorting ink blobs in the background (Sum Flux page)
    =========================================================================== */
 
-body.sumflux { position: relative; overflow-x: hidden; }
+body.sumflux,
+body.fiction,
+body.nonfiction { position: relative; overflow-x: hidden; }
 
 .drift-bg {
   position: fixed;
@@ -476,7 +478,13 @@ body.sumflux { position: relative; overflow-x: hidden; }
 /* Keep page content above the background. */
 body.sumflux .inner-head,
 body.sumflux .inner-main,
-body.sumflux .credit { position: relative; z-index: 1; }
+body.sumflux .credit,
+body.fiction .inner-head,
+body.fiction .inner-main,
+body.fiction .credit,
+body.nonfiction .inner-head,
+body.nonfiction .inner-main,
+body.nonfiction .credit { position: relative; z-index: 1; }
 
 /* ---- Empty state ----------------------------------------------------------- */
 
