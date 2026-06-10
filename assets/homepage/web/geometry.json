@@ -1,0 +1,151 @@
+{
+  "stage_aspect": 1.3902,
+  "comp_w": 4147,
+  "comp_h": 2983,
+  "layers": [
+    {
+      "file": "left_01.webp",
+      "side": "left",
+      "type": "half",
+      "crop": [
+        0,
+        0,
+        4085,
+        2892
+      ],
+      "left": 1.608,
+      "top": 1.862,
+      "width": 98.505,
+      "height": 96.949,
+      "score": 18890.3
+    },
+    {
+      "file": "right_01.webp",
+      "side": "right",
+      "type": "half",
+      "crop": [
+        0,
+        0,
+        2134,
+        2696
+      ],
+      "left": 47.692,
+      "top": 9.685,
+      "width": 51.459,
+      "height": 90.379,
+      "score": 991.6
+    },
+    {
+      "file": "left-blob-1.webp",
+      "side": "left",
+      "type": "blob",
+      "crop": [
+        4,
+        2,
+        894,
+        528
+      ],
+      "left": 2.947,
+      "top": 81.201,
+      "width": 21.461,
+      "height": 17.633,
+      "score": 7186.0
+    },
+    {
+      "file": "left-blob-2.webp",
+      "side": "left",
+      "type": "blob",
+      "crop": [
+        0,
+        4,
+        208,
+        217
+      ],
+      "left": 27.597,
+      "top": 51.775,
+      "width": 5.016,
+      "height": 7.14,
+      "score": 6643.8
+    },
+    {
+      "file": "left-blob-3.webp",
+      "side": "left",
+      "type": "blob",
+      "crop": [
+        0,
+        4,
+        376,
+        298
+      ],
+      "left": 28.937,
+      "top": 11.174,
+      "width": 9.067,
+      "height": 9.856,
+      "score": 4313.3
+    },
+    {
+      "file": "right-blob-1.webp",
+      "side": "right",
+      "type": "blob",
+      "crop": [
+        0,
+        0,
+        1178,
+        574
+      ],
+      "left": 70.466,
+      "top": 79.711,
+      "width": 28.406,
+      "height": 19.242,
+      "score": 1221.2
+    },
+    {
+      "file": "right-blob-2.webp",
+      "side": "right",
+      "type": "blob",
+      "crop": [
+        2,
+        4,
+        1060,
+        884
+      ],
+      "left": 47.692,
+      "top": 70.399,
+      "width": 25.512,
+      "height": 29.501,
+      "score": 921.3
+    },
+    {
+      "file": "right-blob-3.webp",
+      "side": "right",
+      "type": "blob",
+      "crop": [
+        10,
+        4,
+        202,
+        218
+      ],
+      "left": 78.236,
+      "top": 73.751,
+      "width": 4.63,
+      "height": 7.174,
+      "score": 1733.1
+    },
+    {
+      "file": "right-blob-4.webp",
+      "side": "right",
+      "type": "blob",
+      "crop": [
+        4,
+        2,
+        230,
+        132
+      ],
+      "left": 63.5,
+      "top": 16.762,
+      "width": 5.45,
+      "height": 4.358,
+      "score": 1034.2
+    }
+  ]
+}

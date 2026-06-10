@@ -1,0 +1,825 @@
+/* ----------------------------------------------------------------------------
+   Sandolore Sykes — author website
+   Homepage: a vintage book spread reassembled from separated ink layers,
+   floating above a reconstructed paper page. Light forms (left) -> Art,
+   dark forms (right) -> Writing.
+---------------------------------------------------------------------------- */
+
+:root {
+  --paper: #dcc2a6;          /* warm page tone */
+  --surround: #211d1a;       /* gallery surround behind the artwork */
+  --ink: #1c1714;
+  --aspect: 1.3902;          /* original spread aspect ratio (4147 / 2983) */
+  --serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--serif);
+  color: var(--ink);
+  background: radial-gradient(ellipse at center, #2a2521 0%, var(--surround) 78%);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- Homepage stage -------------------------------------------------------- */
+
+.home { overflow: hidden; }
+
+.page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5vmin;
+}
+
+.frame {
+  position: relative;
+  width: min(96vw, calc(94vh * var(--aspect)));
+  aspect-ratio: var(--aspect);
+  box-shadow: 0 2.2vmin 6vmin rgba(0, 0, 0, 0.55);
+  background: var(--paper);
+  user-select: none;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Each ink layer is positioned by % of the frame (see main.js). It sits
+   exactly on top of the matching ink in the background image. */
+.layer {
+  position: absolute;
+  pointer-events: none;          /* hit-testing is handled on the frame */
+  will-change: transform;
+}
+
+.layer img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-origin: center;      /* grow concentrically so the twin stays covered */
+  transition: transform 0.35s cubic-bezier(0.22, 0.61, 0.36, 1),
+              filter 0.35s ease;
+}
+
+/* On hover the shape grows a little, covering its twin in the background. */
+/* On hover the shape lifts off the page: a real shift up and a strong shadow.
+   It no longer perfectly covers its twin underneath — that's intentional, it
+   reads as the stain peeling off the paper. */
+.layer.is-hover img {
+  filter: drop-shadow(0 3vmin 2.6vmin rgba(0, 0, 0, 0.55));
+}
+
+/* Small stains lift and ripple with a liquid distortion. */
+.layer[data-type="blob"].is-hover img {
+  transform: translateY(-6%) scale(1.18);
+  filter: url(#home-warp) drop-shadow(0 3vmin 2.6vmin rgba(0, 0, 0, 0.55));
+}
+
+/* The big stains only grow a little (they're already huge). */
+.layer[data-type="half"].is-hover img {
+  transform: translateY(-2.5%) scale(1.05);
+}
+
+.frame.can-click { cursor: pointer; }
+
+/* ---- Contact note ---------------------------------------------------------- */
+
+/* Three short lines in the open paper of the lower-left page, in the same
+   paper chip as the animation toggle, nudged 20px down so it sits nicely
+   between the central stains and the bottom-left blob (top edge ~81%). */
+.contact-link {
+  position: absolute;
+  left: 4%;
+  top: calc(62% + 20px);
+  z-index: 20;
+  display: inline-block;
+  font-family: "IM Fell English", Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(0.9rem, 2.1vmin, 1.4rem);
+  line-height: 1.35;
+  letter-spacing: 0.03em;
+  text-align: center;
+  text-decoration: none;
+  color: #000;
+  /* Same chip as the animation toggle. */
+  background: rgba(220, 194, 166, 0.85);
+  border: 1px solid rgba(28, 23, 20, 0.35);
+  border-radius: 4px;
+  padding: 0.75rem 0.95rem; /* rem: same computed padding as the toggle chip */
+  backdrop-filter: blur(1px);
+  transform-origin: left top;
+  opacity: 0;
+  animation: fade-in 0.9s ease 1.1s forwards;
+  transition: transform 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* Only "here" is underlined, to read as the link. */
+.contact-here {
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+
+/* Gentle lift and tilt on hover, like a paper label peeling. */
+.contact-link:hover,
+.contact-link:focus-visible {
+  transform: scale(1.1) rotate(-2deg);
+  outline: none;
+}
+
+/* ---- Site credit, bottom edge of the left page ----------------------------- */
+
+.home-credit {
+  position: absolute;
+  left: 23%;
+  bottom: 1.6%;
+  z-index: 20;
+  margin: 0;
+  font-family: "IM Fell English", Georgia, serif;
+  font-size: clamp(0.55rem, 1.3vmin, 0.8rem);
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  pointer-events: auto;
+}
+.home-credit a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+.home-credit a:hover,
+.home-credit a:focus-visible {
+  text-decoration-thickness: 2px;
+  outline: none;
+}
+
+/* ---- Big ART / WRITING corner links --------------------------------------- */
+
+.corner-link {
+  position: absolute;
+  top: 2.6%;
+  z-index: 20;
+  /* "IM Fell English SC": antique letterpress ink that looks like it has
+     bled / dissolved into the paper — in keeping with the ink-in-water art. */
+  font-family: "IM Fell English SC", var(--serif);
+  font-weight: 400;
+  font-size: clamp(1.9rem, 6.6vmin, 4.4rem);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink);
+  /* Cream halo so the text stays legible over the busy artwork. */
+  text-shadow: 0 1px 0 rgba(245, 236, 219, 0.9),
+               0 0 14px rgba(245, 236, 219, 0.8);
+  transition: transform 0.35s cubic-bezier(0.22, 0.61, 0.36, 1),
+              letter-spacing 0.35s ease, filter 0.35s ease;
+}
+.corner-art { left: 3.5%; transform-origin: left center; }
+.corner-writing { right: 3.5%; transform-origin: right center; }
+
+/* ART in white — given a dark halo so it reads on the light left page. */
+.corner-art {
+  color: #ffffff;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.7),
+               0 0 8px rgba(0, 0, 0, 0.55),
+               1px 1px 1px rgba(0, 0, 0, 0.6);
+}
+
+/* Grow + drop shadow when the link is hovered/focused, or when the matching
+   stains are hovered (.is-active is toggled from main.js). */
+.corner-link:hover,
+.corner-link:focus-visible,
+.corner-link.is-active {
+  transform: scale(1.22);
+  letter-spacing: 0.18em;
+  filter: drop-shadow(0 0.9vmin 1.1vmin rgba(0, 0, 0, 0.5));
+  outline: none;
+}
+
+/* ---- Credit --------------------------------------------------------------- */
+
+.credit {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0.5rem;
+  text-align: center;
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  color: rgba(241, 227, 207, 0.4);
+  pointer-events: none;
+}
+.credit a {
+  pointer-events: auto;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+.credit a:hover,
+.credit a:focus-visible {
+  color: rgba(241, 227, 207, 0.85);
+  outline: none;
+}
+
+/* ---- Animations ----------------------------------------------------------- */
+
+@keyframes reveal {
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes fade-in {
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop, .layer, .contact-link { animation-duration: 0.01ms; }
+  .layer { opacity: 1; transform: none; }
+  .layer img { transition: none; }
+}
+
+/* ---- Accessible nav (visually hidden, keyboard reachable) ----------------- */
+
+.a11y-nav a {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%);
+}
+.a11y-nav a:focus {
+  position: fixed;
+  top: 0.5rem; left: 0.5rem;
+  width: auto; height: auto;
+  margin: 0; padding: 0.4em 0.8em;
+  clip: auto; clip-path: none;
+  z-index: 100;
+  background: #f1e3cf;
+  color: var(--ink);
+  border-radius: 3px;
+  text-decoration: none;
+}
+
+/* Hidden from sight, announced by screen readers. */
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%);
+}
+
+/* Back-to-homepage link floating over the artwork page. */
+.back-link {
+  position: fixed;
+  top: 1.1rem;
+  left: 1.2rem;
+  z-index: 90;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: rgba(241, 227, 207, 0.7);
+  background: rgba(28, 23, 20, 0.55);
+  border: 1px solid rgba(241, 227, 207, 0.25);
+  border-radius: 4px;
+  padding: 0.5em 0.8em;
+  backdrop-filter: blur(2px);
+  transition: color 0.3s ease, background 0.3s ease;
+}
+.back-link:hover,
+.back-link:focus-visible {
+  color: #1c1714;
+  background: #f1e3cf;
+  outline: none;
+}
+
+/* ===========================================================================
+   Landing page (new homepage): black, two doors
+   =========================================================================== */
+
+body.landing {
+  background: #000;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.landing-nav {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(2.5rem, 10vw, 10rem);
+  padding: clamp(1.5rem, 5vmin, 4rem);
+}
+
+.landing-link {
+  font-family: "IM Fell English SC", var(--serif);
+  font-weight: 400;
+  font-size: clamp(1.6rem, 5.5vw, 4.6rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  text-align: center;
+  color: #fff;
+  transition: transform 0.35s cubic-bezier(0.22, 0.61, 0.36, 1),
+              letter-spacing 0.35s ease, text-shadow 0.35s ease;
+}
+.landing-link:hover,
+.landing-link:focus-visible {
+  transform: scale(1.12);
+  letter-spacing: 0.16em;
+  text-shadow: 0 0 24px rgba(255, 255, 255, 0.55);
+  outline: none;
+}
+.landing-link:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 0.4em;
+}
+
+.landing-credit {
+  position: fixed;
+  left: 1.2rem;
+  bottom: 1rem;
+  margin: 0;
+  font-family: "IM Fell English", Georgia, serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.6);
+}
+.landing-credit a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+.landing-credit a:hover,
+.landing-credit a:focus-visible {
+  color: #fff;
+  outline: none;
+}
+
+/* ===========================================================================
+   Inner pages (art / writing)
+   =========================================================================== */
+
+body.inner {
+  background: radial-gradient(ellipse at center, #2a2521 0%, var(--surround) 80%);
+  color: #f1e3cf;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.inner-head {
+  padding: clamp(2rem, 6vmin, 5rem) clamp(1.5rem, 6vw, 6rem) 0;
+}
+
+.inner-head .home-link {
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: rgba(241, 227, 207, 0.55);
+  transition: color 0.3s ease;
+}
+.inner-head .home-link:hover,
+.inner-head .home-link:focus-visible { color: #f1e3cf; }
+.inner-head .home-link + .home-link { margin-left: 1.4rem; }
+
+.inner-main {
+  flex: 1;
+  padding: clamp(1.5rem, 5vmin, 4rem) clamp(1.5rem, 6vw, 6rem);
+}
+
+.inner-main h1 {
+  font-weight: 400;
+  font-size: clamp(2.4rem, 8vmin, 5rem);
+  letter-spacing: 0.02em;
+  margin: 0.2em 0 0;
+}
+
+.inner-main .lede {
+  color: rgba(241, 227, 207, 0.6);
+  font-size: 1.05rem;
+  max-width: 36rem;
+  margin-top: 1.2rem;
+}
+
+/* ===========================================================================
+   Drifting, distorting ink blobs in the background (Sum Flux page)
+   =========================================================================== */
+
+body.sumflux { position: relative; overflow-x: hidden; }
+
+.drift-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.bg-blob {
+  position: absolute;
+  filter: url(#blob-warp);
+  opacity: 0.16;
+  /* Light ink on the dark surround. */
+  mix-blend-mode: screen;
+  will-change: transform;
+}
+
+.bg-blob.b1 {
+  width: 48vw; top: -6vh; left: -8vw;
+  animation: drift-1 52s ease-in-out infinite;
+}
+.bg-blob.b2 {
+  width: 30vw; top: 44vh; left: 58vw;
+  animation: drift-2 64s ease-in-out infinite;
+}
+.bg-blob.b3 {
+  width: 22vw; top: 70vh; left: 6vw;
+  animation: drift-3 46s ease-in-out infinite;
+}
+.bg-blob.b4 {
+  width: 40vw; top: 30vh; left: 30vw;
+  opacity: 0.10;
+  animation: drift-4 78s ease-in-out infinite;
+}
+
+@keyframes drift-1 {
+  0%,100% { transform: translate(0,0) rotate(0deg) scale(1); }
+  50%     { transform: translate(8vw, 10vh) rotate(14deg) scale(1.12); }
+}
+@keyframes drift-2 {
+  0%,100% { transform: translate(0,0) rotate(0deg) scale(1); }
+  50%     { transform: translate(-12vw, -8vh) rotate(-18deg) scale(1.18); }
+}
+@keyframes drift-3 {
+  0%,100% { transform: translate(0,0) rotate(0deg) scale(1); }
+  50%     { transform: translate(10vw, -12vh) rotate(20deg) scale(1.25); }
+}
+@keyframes drift-4 {
+  0%,100% { transform: translate(0,0) rotate(0deg) scale(1.05); }
+  50%     { transform: translate(-9vw, 9vh) rotate(-10deg) scale(0.9); }
+}
+
+/* Keep page content above the background. */
+body.sumflux .inner-head,
+body.sumflux .inner-main,
+body.sumflux .credit { position: relative; z-index: 1; }
+
+/* ---- Empty state ----------------------------------------------------------- */
+
+.page-empty {
+  margin-top: clamp(2.5rem, 10vmin, 7rem);
+  font-size: clamp(1.1rem, 3vmin, 1.5rem);
+  font-style: italic;
+  color: rgba(241, 227, 207, 0.55);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-blob { animation: none; }
+}
+
+/* ===========================================================================
+   Story pages (Fiction / Non-Fiction / Sum Flux) — see stories.js
+   =========================================================================== */
+
+.story-main { max-width: 1180px; margin: 0 auto; width: 100%; }
+
+/* Rows of three, collapsing gracefully on narrow screens. */
+.story-grid {
+  margin-top: clamp(1.8rem, 5vmin, 3.2rem);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.2rem, 2.5vw, 2rem);
+}
+@media (max-width: 880px) { .story-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .story-grid { grid-template-columns: 1fr; } }
+
+.story-card {
+  font-family: var(--serif);
+  text-align: left;
+  background: var(--paper);
+  color: var(--ink);
+  border: none;
+  border-radius: 3px;
+  padding: 1.4rem 1.5rem;
+  min-height: 9.5rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  box-shadow: 0 1.2vmin 3vmin rgba(0, 0, 0, 0.4);
+  transition: transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1),
+              box-shadow 0.4s ease;
+}
+.story-card:hover,
+.story-card:focus-visible {
+  transform: translateY(-6px);
+  box-shadow: 0 2.2vmin 4.6vmin rgba(0, 0, 0, 0.5);
+  outline: none;
+}
+
+.story-title {
+  font-weight: 400;
+  font-size: clamp(1.25rem, 3vmin, 1.55rem);
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+.story-preview {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.5;
+  color: rgba(28, 23, 20, 0.7);
+  /* First sentence, cut to two lines if needed. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Explicit "open the popup" affordance at the bottom of each card. */
+.read-more {
+  margin-top: auto;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  color: rgba(28, 23, 20, 0.6);
+  transition: color 0.3s ease;
+}
+.story-card:hover .read-more,
+.story-card:focus-visible .read-more { color: var(--ink); }
+
+/* ---- Story popup ---------------------------------------------------------- */
+
+body.modal-open { overflow: hidden; }
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 4vw, 3rem);
+  /* Lighten / wash out the rest of the page behind the story. */
+  background: rgba(222, 204, 178, 0.9);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  animation: fade-in 0.3s ease forwards;
+}
+.modal[hidden] { display: none; }
+
+/* Drifting, distorting ink blobs behind the open story. */
+.modal-blobs {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.modal-blobs .bg-blob {
+  opacity: 0.45;
+  mix-blend-mode: multiply;   /* dark ink reads against the light wash */
+}
+.modal-blobs .mb1 { width: 42vw; top: -6%;  left: -8%;  animation: drift-1 50s ease-in-out infinite; }
+.modal-blobs .mb2 { width: 34vw; bottom: -8%; right: -6%; animation: drift-2 62s ease-in-out infinite; }
+.modal-blobs .mb3 { width: 20vw; top: 58%;   left: 46%;  animation: drift-3 44s ease-in-out infinite; }
+
+.modal-panel {
+  position: relative;
+  z-index: 1;
+  width: min(680px, 100%);
+  max-height: min(82vh, 100%);
+  overflow-y: auto;
+  background: #f5ecdb;
+  color: var(--ink);
+  border: 1px solid rgba(28, 23, 20, 0.18);
+  border-radius: 4px;
+  padding: clamp(1.6rem, 4vw, 2.8rem);
+  box-shadow: 0 3vmin 7vmin rgba(0, 0, 0, 0.45);
+  animation: modal-in 0.4s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+.modal-panel:focus { outline: none; }
+
+.modal-back {
+  font-family: var(--serif);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  background: none;
+  border: none;
+  padding: 0.2em 0;
+  color: rgba(28, 23, 20, 0.6);
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+.modal-back:hover, .modal-back:focus-visible { color: var(--ink); outline: none; }
+
+.modal-title {
+  font-weight: 400;
+  font-size: clamp(1.7rem, 5vmin, 2.6rem);
+  margin: 0.8rem 0 1.2rem;
+  letter-spacing: 0.01em;
+}
+
+/* Description line (Non-Fiction), under the title. */
+.modal-desc {
+  margin: -0.6rem 0 1.6rem;
+  font-size: 1rem;
+  font-style: italic;
+  line-height: 1.6;
+  color: rgba(28, 23, 20, 0.65);
+}
+
+.modal-body p {
+  /* Roomy reading: taller lines, a double space between paragraphs. */
+  margin: 0 0 2.2rem;
+  font-size: 1.05rem;
+  line-height: 1.9;
+  color: rgba(28, 23, 20, 0.9);
+}
+.modal-body p:last-child { margin-bottom: 0; }
+
+@keyframes modal-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.985); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-blobs .bg-blob { animation: none; }
+  .modal, .modal-panel { animation: none; }
+}
+
+/* ===========================================================================
+   Animation toggle ("calm mode")
+
+   site.js sets class "no-anim" on <body> when animations are disabled.
+   Each page describes its calm variant below; a new page only needs its own
+   body.no-anim rules if it adds decorations of its own.
+   =========================================================================== */
+
+/* ---- The switch itself ----------------------------------------------------- */
+
+.anim-control {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.anim-switch {
+  position: relative;
+  width: 2.9rem;
+  height: 1.55rem;
+  padding: 0;
+  border: 1px solid rgba(28, 23, 20, 0.45);
+  border-radius: 1rem;
+  background: rgba(28, 23, 20, 0.22);
+  cursor: pointer;
+  transition: background 0.25s ease;
+}
+.anim-switch[aria-checked="true"] { background: var(--ink); }
+.anim-switch:focus-visible {
+  outline: 2px solid #b3631d;
+  outline-offset: 2px;
+}
+
+.anim-knob {
+  position: absolute;
+  top: 0.15rem;
+  left: 0.15rem;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 50%;
+  background: #f1e3cf;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  transition: transform 0.25s ease;
+}
+.anim-switch[aria-checked="true"] .anim-knob { transform: translateX(1.3rem); }
+
+.anim-caption {
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* Fixed in the top-right corner of every page, on a dark chip so it stays
+   readable over any background (artwork, paper or black). */
+.anim-fixed {
+  position: fixed;
+  top: 1rem;
+  right: 1.2rem;
+  z-index: 90;
+  padding: 0.55em 0.8em;
+  background: rgba(28, 23, 20, 0.55);
+  border: 1px solid rgba(241, 227, 207, 0.25);
+  border-radius: 4px;
+  backdrop-filter: blur(2px);
+  color: rgba(241, 227, 207, 0.85);
+}
+.anim-fixed .anim-switch { border-color: rgba(241, 227, 207, 0.5); }
+
+/* ---- Global calm rules ------------------------------------------------------ */
+
+/* Stop every CSS animation and transition, site-wide. */
+body.no-anim *,
+body.no-anim *::before,
+body.no-anim *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Plain background instead of the radial gradient. */
+body.no-anim { background: var(--surround); }
+body.landing.no-anim { background: #000; }
+
+/* ---- Landing page, calm ------------------------------------------------------ */
+
+/* Motionless hover/focus feedback: underline instead of growing. */
+body.no-anim .landing-link:hover,
+body.no-anim .landing-link:focus-visible {
+  transform: none;
+  text-shadow: none;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+/* ---- Artwork page (Sandolore), calm ------------------------------------------ */
+
+/* Only the original artwork: no ink layers floating on top of it. */
+body.no-anim .layer { display: none; }
+body.no-anim .warp-defs { display: none; }
+body.no-anim .frame.can-click { cursor: default; }
+
+/* Contact note: show immediately (no fade-in), no motion on hover. */
+body.no-anim .contact-link { opacity: 1; }
+body.no-anim .home-credit { opacity: 1; }
+body.no-anim .contact-link:hover,
+body.no-anim .contact-link:focus-visible {
+  transform: none;
+  text-decoration: underline;
+}
+
+/* Corner links in a plain, very legible face on a solid chip. */
+body.no-anim .corner-link {
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: clamp(1.3rem, 4.2vmin, 2.6rem);
+  letter-spacing: 0.1em;
+  color: var(--ink);
+  background: rgba(245, 236, 219, 0.94);
+  border: 1px solid rgba(28, 23, 20, 0.4);
+  border-radius: 3px;
+  padding: 0.18em 0.55em;
+  text-shadow: none;
+}
+body.no-anim .corner-link:hover,
+body.no-anim .corner-link:focus-visible,
+body.no-anim .corner-link.is-active {
+  transform: none;
+  filter: none;
+  letter-spacing: 0.1em;
+  /* Motionless hover/focus feedback: invert the chip. */
+  background: var(--ink);
+  color: #f5ecdb;
+}
+body.no-anim .corner-link:focus-visible {
+  outline: 2px solid #f5ecdb;
+  outline-offset: 2px;
+}
+
+/* ---- Story pages, calm -------------------------------------------------------- */
+
+/* No drifting background blobs (Sum Flux). */
+body.no-anim .drift-bg { display: none; }
+
+body.no-anim .story-card:hover,
+body.no-anim .story-card:focus-visible {
+  transform: none;
+  box-shadow: 0 1.2vmin 3vmin rgba(0, 0, 0, 0.4);
+}
+body.no-anim .story-card:focus-visible {
+  outline: 2px solid #f1e3cf;
+  outline-offset: 2px;
+}
+
+/* Story popup: plain wash, no drifting blobs behind the text. */
+body.no-anim .modal-blobs { display: none; }
+body.no-anim .modal {
+  background: rgba(222, 204, 178, 0.97);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}

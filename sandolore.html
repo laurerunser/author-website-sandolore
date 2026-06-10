@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sandolore — Sandolore Sykes</title>
+  <meta name="description" content="Sandolore Sykes — fiction and non-fiction.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="home">
+  <!-- Liquid distortion applied to the small stains while hovered. -->
+  <svg class="warp-defs" width="0" height="0" aria-hidden="true" focusable="false">
+    <filter id="home-warp" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.01 0.014" numOctaves="2" seed="5" result="noise">
+        <animate attributeName="baseFrequency" dur="8s" repeatCount="indefinite"
+                 values="0.010 0.014; 0.018 0.020; 0.010 0.014"
+                 calcMode="spline" keyTimes="0;0.5;1" keySplines="0.4 0 0.6 1; 0.4 0 0.6 1"/>
+      </feTurbulence>
+      <feDisplacementMap in="SourceGraphic" in2="noise" xChannelSelector="R" yChannelSelector="G">
+        <animate attributeName="scale" dur="6s" repeatCount="indefinite"
+                 values="6; 16; 6" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.4 0 0.6 1; 0.4 0 0.6 1"/>
+      </feDisplacementMap>
+    </filter>
+  </svg>
+
+  <!-- Accessible navigation for keyboard / screen-reader users.
+       The artwork itself is the primary (mouse/touch) navigation. -->
+  <nav class="a11y-nav" aria-label="Main">
+    <a href="index.html">Home</a>
+    <a href="nonfiction.html">Non-Fiction</a>
+    <a href="writing.html">Fiction</a>
+    <a href="mailto:sandolore@gmail.com">Contact</a>
+  </nav>
+
+  <a class="back-link" href="index.html">&larr; Home</a>
+
+  <main class="page">
+    <div class="frame" id="frame" role="group" aria-label="Interactive artwork by Sandolore Sykes. The light forms on the left lead to Non-Fiction; the dark forms on the right lead to Fiction.">
+      <img class="backdrop" src="assets/homepage/web/home-bg.webp" alt="" draggable="false">
+      <!-- Ink layers are injected here by main.js -->
+
+      <a class="corner-link corner-art" href="nonfiction.html">Non-Fiction</a>
+      <a class="corner-link corner-writing" href="writing.html">Fiction</a>
+
+      <!-- Contact note: three lines in the clear paper between the stains,
+           lower-left page. -->
+      <a class="contact-link" href="mailto:sandolore@gmail.com">contact<br>Sandolore Sykes<br><span class="contact-here">here</span></a>
+
+      <!-- Site credit: bottom edge of the left page. -->
+      <p class="home-credit">2026 — website by <a href="https://laurerunser.com">laure runser</a></p>
+    </div>
+  </main>
+
+  <script src="site.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

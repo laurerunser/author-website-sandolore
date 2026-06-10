@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sum Flux — Sandolore Sykes</title>
+  <meta name="description" content="Sum Flux — stories by Sandolore Sykes.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="inner sumflux">
+
+  <!-- Drifting, distorting ink blobs in the background -->
+  <div class="drift-bg" aria-hidden="true">
+    <img class="bg-blob b1" src="assets/homepage/web/left-blob-1.webp" alt="">
+    <img class="bg-blob b2" src="assets/homepage/web/right-blob-2.webp" alt="">
+    <img class="bg-blob b3" src="assets/homepage/web/left-blob-3.webp" alt="">
+    <img class="bg-blob b4" src="assets/homepage/web/right-blob-1.webp" alt="">
+  </div>
+
+  <header class="inner-head">
+    <nav aria-label="Back">
+      <a class="home-link" href="index.html">&larr; Home</a>
+    </nav>
+  </header>
+
+  <main class="inner-main story-main">
+    <h1>Sum Flux</h1>
+    <p class="lede">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+      eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+      veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+      commodo consequat.</p>
+    <div class="story-grid" id="story-grid"></div>
+  </main>
+
+  <footer class="credit">2026 — website by <a href="https://laurerunser.com">laure runser</a></footer>
+
+  <script src="site.js"></script>
+  <script src="stories.js"></script>
+  <script>
+    initStoryPage({ dir: "assets/sumflux/", hasDescription: false });
+  </script>
+</body>
+</html>
