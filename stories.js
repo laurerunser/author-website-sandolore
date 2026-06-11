@@ -35,6 +35,7 @@ function initStoryPage(config) {
   injectWarpFilter();
   const modal = injectModal();
   const modalTitle = modal.querySelector(".modal-title");
+  const modalImage = modal.querySelector(".modal-image");
   const modalDesc = modal.querySelector(".modal-desc");
   const modalBody = modal.querySelector(".modal-body");
   const modalPanel = modal.querySelector(".modal-panel");
@@ -75,6 +76,14 @@ function initStoryPage(config) {
     card.type = "button";
     card.className = "story-card";
 
+    if (item.image) {
+      const img = document.createElement("img");
+      img.className = "story-card-img";
+      img.src = item.image;
+      img.alt = "";
+      card.appendChild(img);
+    }
+
     const title = document.createElement("h2");
     title.className = "story-title";
     title.textContent = item.title || "Untitled";
@@ -99,6 +108,13 @@ function initStoryPage(config) {
     lastFocused = document.activeElement;
 
     modalTitle.textContent = item.title || "Untitled";
+
+    if (item.image) {
+      modalImage.src = item.image;
+      modalImage.hidden = false;
+    } else {
+      modalImage.hidden = true;
+    }
 
     if (hasDescription && item.description) {
       modalDesc.textContent = item.description;
@@ -196,6 +212,7 @@ function initStoryPage(config) {
       '<div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title" tabindex="-1">' +
       '<button class="modal-back" type="button">&larr; Back</button>' +
       '<h2 class="modal-title" id="modal-title"></h2>' +
+      '<img class="modal-image" alt="" hidden>' +
       '<p class="modal-desc" hidden></p>' +
       '<div class="modal-body"></div>' +
       "</div>";
